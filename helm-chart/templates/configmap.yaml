@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+data:
+  DB_HOST: "{{ .Values.database.url }}"
+  DB_PORT: "{{ .Values.database.port }}"
+  DB_CONNECTION: "{{ .Values.database.connection }}"
+  DB_DATABASE: "{{ .Values.database.name }}"
+  ACCESS_TOKEN_EXPIRE_MINUTES: "{{ .Values.auth.accessTokenExpireMinutes }}"
+  REFRESH_TOKEN_EXPIRE_DAYS: "{{ .Values.auth.refreshTokenExpireDays }}"
+  ALGORITHM: "{{ .Values.auth.algorithm }}"
+  ORIGINS: "{{ .Values.fastapi.origins }}"
+  OUTPUT_PATH: "{{ .Values.reports.output_path }}"
+  TEMPLATE_PATH: "{{ .Values.reports.template_path }}"
+  TEMP_PATH: "{{ .Values.reports.temp_path }}"
+  DAILY_REPORT: "{{ .Values.reports.daily_report }}"
+  BUCKET_NAME: "{{ .Values.aws.bucket_name }}"
+  REGION_NAME: "{{ .Values.aws.region_name }}"
+  MEDIA_FILE_PATH: "{{ .Values.aws.media_file_path }}"

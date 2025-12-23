@@ -1,0 +1,154 @@
+###
+GET http://localhost:8000/preproc/canup
+X-Token: xxx
+
+###
+GET http://localhost:8000/db_health
+
+###
+POST http://localhost:8000/login
+Content-Type: application/json
+
+{
+    "device_id": "raps_pi_test",
+    "device_pass": "test_pass"
+}
+
+###
+POST http://localhost:8000/upload/rapsberrypi
+Content-Type: application/json
+X-Token: df0538665eb33e7b5ad408c10dc141d4a46ade912629c59c27a0d6744a64d7d2
+
+{
+
+}
+
+###
+GET http://localhost:8000/links?imo=12345
+Content-Type: application/json
+X-Token: df0538665eb33e7b5ad408c10dc141d4a46ade912629c59c27a0d6744a64d7d2
+
+###
+# GET http://localhost:8000/aux_data?imo=9971147
+# GET http://localhost:8000/aux_data?imo=9971147&periodicity=60&start_date=1699999200&end_date=1700085600
+
+GET http://localhost:8000/aux_data?imo=9971147
+# GET https://be.perfomax.io/aux_data?imo=9971147
+Content-Type: application/json
+X-Token: df0538665eb33e7b5ad408c10dc141d4a46ade912629c59c27a0d6744a64d7d2
+
+###
+# GET https://be.perfomax.io/links?imo=9971147
+GET http://localhost:8000/positions?imo=9971147
+Content-Type: application/json
+X-Token: df0538665eb33e7b5ad408c10dc141d4a46ade912629c59c27a0d6744a64d7d2
+
+###
+GET http://localhost:8000/positions?imo=9971147
+Content-Type: application/json
+X-Token: df0538665eb33e7b5ad408c10dc141d4a46ade912629c59c27a0d6744a64d7d2
+
+###
+GET http://localhost:8000/alerts?imo=1234567
+Content-Type: application/json
+X-Token: df0538665eb33e7b5ad408c10dc141d4a46ade912629c59c27a0d6744a64d7d2
+
+###
+GET http://localhost:8000/real-time?imo=9971147
+Content-Type: application/json
+X-Token: df0538665eb33e7b5ad408c10dc141d4a46ade912629c59c27a0d6744a64d7d2
+
+###
+GET http://localhost:8000/real-time?imo=9971147
+Content-Type: application/json
+X-Token: df0538665eb33e7b5ad408c10dc141d4a46ade912629c59c27a0d6744a64d7d2
+
+###
+GET http://localhost:8000/main-data?imo=9971123&interval=60&start_date=1699488000&end_date=1703109599
+Content-Type: application/json
+X-Token: df0538665eb33e7b5ad408c10dc141d4a46ade912629c59c27a0d6744a64d7d2
+
+###
+GET http://localhost:8000/aux-data?imo=9971123&interval=60&start_date=1699488000&end_date=1703109599
+Content-Type: application/json
+X-Token: df0538665eb33e7b5ad408c10dc141d4a46ade912629c59c27a0d6744a64d7d2
+
+###
+GET http://localhost:8000/engine-real-time?imo=9971147&engine=ME_CENTRE&latest=0
+Content-Type: application/json
+X-Token: df0538665eb33e7b5ad408c10dc141d4a46ade912629c59c27a0d6744a64d7d2
+
+###
+GET http://localhost:8000/report?imo=9971147&report_date=2024-01-09
+Content-Type: application/json
+X-Token: df0538665eb33e7b5ad408c10dc141d4a46ade912629c59c27a0d6744a64d7d2
+
+####
+# GET https://be.perfomax.io/aux-data?imo=9971147&interval=60&start_date=1703196000000&end_date=1703282399000
+GET http://localhost:8000/sog?imo=22222222&start_date=1703196000&end_date=1703282399
+Content-Type: application/json
+X-Token: df0538665eb33e7b5ad408c10dc141d4a46ade912629c59c27a0d6744a64d7d2
+
+####
+# GET https://be.perfomax.io/kpis?customer=suryanautika
+GET http://localhost:8000/kpis?customer=democompany&source=ais
+Content-Type: application/json
+X-Token: df0538665eb33e7b5ad408c10dc141d4a46ade912629c59c27a0d6744a64d7d2
+
+####
+# GET https://be.perfomax.io/kpis?customer=suryanautika
+GET http://localhost:8000/vessels?customer=democompany
+Content-Type: application/json
+X-Token: df0538665eb33e7b5ad408c10dc141d4a46ade912629c59c27a0d6744a64d7d2
+
+####
+# GET https://be.perfomax.io/kpis?customer=suryanautika
+GET http://localhost:8000/vessel_data?imo=997147
+Content-Type: application/json
+X-Token: df0538665eb33e7b5ad408c10dc141d4a46ade912629c59c27a0d6744a64d7d2
+
+####
+GET http://localhost:8000/map/points?gis_point_type=port&gis_point_type=port1&gis_point_type=oil
+
+###
+GET https://data.aishub.net/ws.php?username=A&format=1&output=json&compress=0&latmin=20.5&latmax=30.8&lonmin=-15&lonmax=18.6
+
+###
+GET https://api.datalastic.com/api/v0/stat?api-key=daf36f4c-4006-4c6d-b6dd-92adca487abc
+
+###
+GET https://api.datalastic.com/api/v0/report?api-key=daf36f4c-4006-4c6d-b6dd-92adca487abc&report_type=request_usage&from=2024-02-01&to=2024-02-29
+
+###
+POST https://api.datalastic.com/api/v0/report
+Content-type: "application/json"
+
+{
+  "api-key": "daf36f4c-4006-4c6d-b6dd-92adca487abc",
+  "report_type": "request_usage",
+  "from": "2024-02-01",
+  "to": "2024-02-29"
+}
+
+###
+GET http://localhost:8000/positions?imo=9971147&source=ais&latest=1
+Content-Type: application/json
+X-Token: df0538665eb33e7b5ad408c10dc141d4a46ade912629c59c27a0d6744a64d7d2
+
+###
+# GET http://localhost:8000/positions?imo=9971147&source=ais&latest=1
+GET http://stage.be.perfomax.io/positions?imo=9971147&latest=1&source=ais
+Content-Type: application/json
+X-Token: df0538665eb33e7b5ad408c10dc141d4a46ade912629c59c27a0d6744a64d7d2
+
+###
+GET https://api.datalastic.com/api/v0/vessel?api-key=daf36f4c-4006-4c6d-b6dd-92adca487abc&mmsi=533132669
+
+###
+GET https://api.datalastic.com/api/v0/vessel?api-key=daf36f4c-4006-4c6d-b6dd-92adca487abc&imo=9971147
+
+###
+GET https://api.datalastic.com/api/v0/vessel_history?api-key=daf36f4c-4006-4c6d-b6dd-92adca487abc&mmsi=533132669&from=2024-01-01&to=2024-01-31
+
+###
+GET https://api.datalastic.com/api/v0/vessel_history?api-key=daf36f4c-4006-4c6d-b6dd-92adca487abc&mmsi=533132669&from=2024-02-01&to=2024-02-15

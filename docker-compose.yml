@@ -1,0 +1,30 @@
+# To build the entire stack run 'make run'
+
+version: "3.7"
+
+networks:
+  dockernet:
+    name: mdig
+    external: true
+
+services:
+  perfomax_be:
+    container_name: nura_demo_be
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    ports:
+      - "9004:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://${DOMAIN}:8000/health"]
+      interval: 5m
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - dockernet
