@@ -23,7 +23,9 @@ class Database:
     def get_engine(cls, url: URL | None = None) -> Engine:
         if isinstance(url, URL):
             cls._url = url
-            cls._session_engine = create_engine(cls._url, echo=False)
+            cls._session_engine = create_engine(
+                cls._url, echo=False, connect_args={"options": "-c search_path=core,public"}
+            )
         elif not cls._session_engine:
             raise ValueError("DB connection is not initiated yet, valid URL required")
         return cls._session_engine
@@ -42,7 +44,9 @@ class Database:
     def get_async_engine(cls) -> AsyncEngine:
         if not cls._async_engine:
             cls._async_engine = create_async_engine(
-                settings.DB_URL_ASYNC, echo=False
+                settings.DB_URL_ASYNC,
+                echo=False,
+                connect_args={"server_settings": {"search_path": "core,public"}},
             )
         return cls._async_engine
 

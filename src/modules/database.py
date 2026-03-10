@@ -15,7 +15,7 @@ url = URL.create(
             settings.DB_DATABASE,
         )
 print(url)
-engines = create_engine(url,echo=True)
+engines = create_engine(url, echo=True, connect_args={"options": "-c search_path=core,public"})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engines)
 
 def db_init(counter: int = 1) -> bool:
