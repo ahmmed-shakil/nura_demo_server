@@ -21,6 +21,18 @@ class ImageCaptureFromCCTV(Base):
     )
 
 
+class Customer(Base):
+    __tablename__ = "customer"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(nullable=False)
+    description: Mapped[str | None]
+    create_date: Mapped[datetime] = mapped_column(
+        server_default=func.timezone("UTC", func.current_timestamp())
+    )
+    logo: Mapped[str | None]
+
+
 class User(Base):
     __tablename__ = "user"
 
