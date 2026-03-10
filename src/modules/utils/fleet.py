@@ -83,7 +83,7 @@ def get_latest_position_data(customer: str) -> list[schema.VesselPosition]:
 with vs as(SELECT v.id, ft.name as fleet_type, v.imo, v.mmsi, v.name from core.vessel v
 inner join core.fleet_type ft on v.fleet_type_id =ft.id
 inner join core.customer c on c.id = v.customer_id
-where :customer is null or c.name = :customer),
+where cast(:customer as text) is null or c.name = cast(:customer as text)),
 t as(
 SELECT 'internal' as source, vs.id, max(ud.nr_time) as dt from core.interpolated_data ud
 inner join vs on vs.id = ud.vessel_id

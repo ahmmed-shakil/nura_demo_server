@@ -163,7 +163,7 @@ def get_speed_data(
     if latest:
         sog_query = text(
             f"""select
-        date_bin(:interval, d.nr_time , TIMESTAMP '2023-01-01') as timestamp,
+        date_bin(make_interval(mins => :interval), d.nr_time , TIMESTAMP '2023-01-01') as timestamp,
         avg(d.average_speed_gps) as sog,
         avg(d.speed_through_water) as stw
     from core.interpolated_data d
@@ -179,12 +179,12 @@ with hourly_series as (
     select generate_series(
         TIMESTAMP :start_date,
         TIMESTAMP :end_date,
-        interval :interval
+        make_interval(mins => :interval)
     ) as timestamp
 ),
 aggregated_data as (
     select
-        date_bin(:interval, d.nr_time, TIMESTAMP '2023-01-01') as timestamp,
+        date_bin(make_interval(mins => :interval), d.nr_time, TIMESTAMP '2023-01-01') as timestamp,
         avg(d.average_speed_gps) as sog,
         avg(d.speed_through_water) as stw
     from core.interpolated_data d
@@ -192,7 +192,7 @@ aggregated_data as (
     where v.imo = :imo
         and (d.average_speed_gps is not null or d.speed_through_water is not null)
         and (d.nr_time between :start_date and :end_date)
-    group by date_bin(:interval, d.nr_time, TIMESTAMP '2023-01-01')
+    group by date_bin(make_interval(mins => :interval), d.nr_time, TIMESTAMP '2023-01-01')
 )
 select
     hs.timestamp,
@@ -207,7 +207,7 @@ order by hs.timestamp desc;
         sog_query,
         {
             "imo": imo,
-            "interval": str(interval) + " minutes",
+            "interval": interval,
             "start_date": datetime.fromtimestamp(start_date, tz=timezone.utc),
             "end_date": datetime.fromtimestamp(end_date, tz=timezone.utc),
         },

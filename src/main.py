@@ -113,9 +113,11 @@ async def internal_exception_handler(request, exc):
         my_app=request.app, middleware_class=CORSMiddleware
     )
     request_origin = request.headers.get("origin", "")
-    if cors_middleware and "*" in cors_middleware.options["allow_origins"]:
+    cors_kwargs = cors_middleware.kwargs if cors_middleware else {}
+    allow_origins = cors_kwargs.get("allow_origins", [])
+    if "*" in allow_origins:
         response.headers["Access-Control-Allow-Origin"] = "*"
-    elif cors_middleware and request_origin in cors_middleware.options["allow_origins"]:
+    elif request_origin in allow_origins:
         response.headers["Access-Control-Allow-Origin"] = request_origin
     return response
 

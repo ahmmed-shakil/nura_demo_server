@@ -14,12 +14,12 @@ with hourly_series as (
     select generate_series(
         TIMESTAMP :start_date,
         TIMESTAMP :end_date,
-        interval :interval
+        make_interval(mins => :interval)
     ) as dt
 ),
 aggregated_data as (
     select
-        date_bin(:interval, u.nr_time, TIMESTAMP '2023-01-01') as dt,
+        date_bin(make_interval(mins => :interval), u.nr_time, TIMESTAMP '2023-01-01') as dt,
         sum(coalesce(u.ae1_energy_produced, 0)) as ae1_energy,
         sum(coalesce(u.ae1_consumption, 0)) as ae1_cons,
         sum(coalesce(u.ae2_energy_produced, 0)) as ae2_energy,
@@ -34,7 +34,7 @@ aggregated_data as (
         v.imo = :imo
         and (u.ae1_consumption is not null or u.ae2_consumption is not null or u.ae3_consumption is not null)
         and u.nr_time between :start_date and :end_date
-    group by date_bin(:interval, u.nr_time, TIMESTAMP '2023-01-01')
+    group by date_bin(make_interval(mins => :interval), u.nr_time, TIMESTAMP '2023-01-01')
 )
 select
     hs.dt,
@@ -57,7 +57,7 @@ order by hs.dt;
         data_sql,
         {
             "imo": imo,
-            "interval": str(interval) + " minutes",
+            "interval": interval,
             "start_date": datetime.fromtimestamp(start_date, tz=timezone.utc),
             "end_date": datetime.fromtimestamp(end_date, tz=timezone.utc),
         },
@@ -95,12 +95,12 @@ with hourly_series as (
     select generate_series(
         TIMESTAMP :start_date,
         TIMESTAMP :end_date,
-        interval :interval
+        make_interval(mins => :interval)
     ) as dt
 ),
 aggregated_data as (
     select
-        date_bin(:interval, u.nr_time, TIMESTAMP '2023-01-01') as dt,
+        date_bin(make_interval(mins => :interval), u.nr_time, TIMESTAMP '2023-01-01') as dt,
         sum(coalesce(u.me1_consumption, 0)) as me1_cons,
         sum(coalesce(u.me2_consumption, 0)) as me2_cons,
         sum(coalesce(u.me3_consumption, 0)) as me3_cons,
@@ -111,7 +111,7 @@ aggregated_data as (
         v.imo = :imo
         and (u.me1_consumption is not null or u.me2_consumption is not null or u.me3_consumption is not null)
         and u.nr_time between :start_date and :end_date
-    group by date_bin(:interval, u.nr_time, TIMESTAMP '2023-01-01')
+    group by date_bin(make_interval(mins => :interval), u.nr_time, TIMESTAMP '2023-01-01')
 )
 select
     hs.dt,
@@ -129,7 +129,7 @@ order by hs.dt;
         data_sql,
         {
             "imo": imo,
-            "interval": str(interval) + " minutes",
+            "interval": interval,
             "start_date": datetime.fromtimestamp(start_date, tz=timezone.utc),
             "end_date": datetime.fromtimestamp(end_date, tz=timezone.utc),
         },
@@ -159,8 +159,8 @@ order by hs.dt;
 
 def get_engine_rt_data(imo: int, engine: str | None = None):
     logger.info("Getting engine real time data")
-    # Setting delta to 15 minutes
-    fresh_delta = "15 minutes"
+    # Minutes window for real-time data freshness.
+    fresh_delta = 15
     # Get data from DB
     sql = text(
         """select nr_time as timestamp, longitude as long, latitude as lat,
@@ -174,7 +174,7 @@ def get_engine_rt_data(imo: int, engine: str | None = None):
     ae3_consumption as ae3_fuel_cons, ae3_energy_produced as ae3_power
 from interpolated_data d
 inner join vessel v on v.id = d.vessel_id
-where v.imo = :imo and nr_time > CURRENT_TIMESTAMP - interval :fresh_delta
+where v.imo = :imo and nr_time > CURRENT_TIMESTAMP - (:fresh_delta * INTERVAL '1 minute')
 order by nr_time desc"""
     )
     try:
