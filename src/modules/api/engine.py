@@ -65,14 +65,14 @@ async def get_main(
 
 @router.get("/real-time", response_model=schema.MERTData | schema.AERTData)
 async def get_engine_rt(
-    imo: Annotated[
-        str | int | None,
-        Query(description="IMO number. Accepts positive integer. Null-like values return empty payload."),
-    ] = None,
     engine: Annotated[
         schema.EngineName,
         Query(description="Engine name, accepted values: ME1, ME2, ME3, AE1, AE2",),
     ],
+    imo: Annotated[
+        str | int | None,
+        Query(description="IMO number. Accepts positive integer. Null-like values return empty payload."),
+    ] = None,
 ):
     parsed_imo = _parse_imo_query_value(imo)
     if parsed_imo is None:
