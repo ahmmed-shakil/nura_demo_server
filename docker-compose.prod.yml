@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  nura_backend:
+    container_name: nura_backend_prod
+    restart: always
+    build:
+      context: .
+      dockerfile: ./Dockerfile.prod
+    env_file:
+      - .env.production
+    ports:
+      - "8000:8000"
+    volumes:
+      # Only mount necessary data directories, not the entire app
+      - ./src/reports/output:/app/src/reports/output
+      - ./src/reports/templates:/app/src/reports/templates
+      - ./src/temp:/app/src/temp
+      - ./files:/app/files
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - backend_network
+
+networks:
+  backend_network:
+    driver: bridge
