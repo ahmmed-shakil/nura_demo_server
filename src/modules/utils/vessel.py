@@ -177,8 +177,8 @@ def get_speed_data(
         sog_query = text("""
 with hourly_series as (
     select generate_series(
-        TIMESTAMP :start_date,
-        TIMESTAMP :end_date,
+        cast(:start_date as timestamp),
+        cast(:end_date as timestamp),
         make_interval(mins => :interval)
     ) as timestamp
 ),

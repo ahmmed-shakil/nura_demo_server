@@ -8,6 +8,21 @@ import src.modules.utils.engine as proc
 router = APIRouter()
 
 
+def _parse_imo_query_value(imo_raw: str | int | None) -> int | None:
+    if imo_raw is None:
+        return None
+    if isinstance(imo_raw, int):
+        return imo_raw if imo_raw > 0 else None
+    normalized = imo_raw.strip().lower()
+    if normalized in {"", "null", "none", "undefined"}:
+        return None
+    try:
+        imo = int(normalized)
+    except ValueError:
+        return None
+    return imo if imo > 0 else None
+
+
 @router.get("/ae", response_model=schema.AUXResponse)
 async def get_aux(
     commons: Annotated[CommonParams, Depends()],
@@ -50,13 +65,21 @@ async def get_main(
 
 @router.get("/real-time", response_model=schema.MERTData | schema.AERTData)
 async def get_engine_rt(
-    imo: Annotated[int, Query(gt=0)],
+    imo: Annotated[
+        str | int | None,
+        Query(description="IMO number. Accepts positive integer. Null-like values return empty payload."),
+    ] = None,
     engine: Annotated[
         schema.EngineName,
         Query(description="Engine name, accepted values: ME1, ME2, ME3, AE1, AE2",),
     ],
 ):
-    content = proc.get_engine_rt_data(imo, engine)
+    parsed_imo = _parse_imo_query_value(imo)
+    if parsed_imo is None:
+        if engine.startswith("AE"):
+            return schema.AERTData()
+        return schema.MERTData()
+    content = proc.get_engine_rt_data(parsed_imo, engine)
     if not content and engine.startswith("AE"):
         content = schema.AERTData()
     if not content and engine.startswith("ME"):
@@ -93,9 +116,4 @@ async def get_engine_params(
     ],
 ):
     content = proc.get_engine_data(commons.imo, commons.start_date, commons.end_date, engine, params)
-    if not content:
-        raise HTTPException(
-            status_code=404,
-            detail="No data available",
-        )
-    return content
+    return content or {}

@@ -12,8 +12,8 @@ def get_aux_data(imo: int, interval: int, start_date: int, end_date: int):
         """
 with hourly_series as (
     select generate_series(
-        TIMESTAMP :start_date,
-        TIMESTAMP :end_date,
+        cast(:start_date as timestamp),
+        cast(:end_date as timestamp),
         make_interval(mins => :interval)
     ) as dt
 ),
@@ -93,8 +93,8 @@ def get_main_data(imo: int, interval: int, start_date: int, end_date: int):
             """
 with hourly_series as (
     select generate_series(
-        TIMESTAMP :start_date,
-        TIMESTAMP :end_date,
+        cast(:start_date as timestamp),
+        cast(:end_date as timestamp),
         make_interval(mins => :interval)
     ) as dt
 ),
